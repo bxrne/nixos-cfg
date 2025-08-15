@@ -1,0 +1,23 @@
+# flake.lock
+flake.lock
+
+# Hardware configurations (generated per-machine)
+hosts/*/hardware-configuration.nix
+
+# Build outputs
+result
+result-*
+
+# Backup files
+*.bak
+*~
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
