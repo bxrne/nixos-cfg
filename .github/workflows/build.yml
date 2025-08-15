@@ -1,0 +1,45 @@
+name: Build and Test NixOS Configurations
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-configs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [thinkpad, virtualbox]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Nix
+      uses: cachix/install-nix-action@v25
+      with:
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+    
+    - name: Setup Cachix
+      uses: cachix/cachix-action@v14
+      with:
+        name: nixos-cfg
+        skipPush: true
+    
+    - name: Check flake validity
+      run: nix flake check --no-build
+    
+    - name: Build NixOS configuration for ${{ matrix.host }}
+      run: |
+        nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel \
+          --print-build-logs \
+          --show-trace
+    
+    - name: Build VM for testing
+      run: |
+        nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.vm \
+          --print-build-logs \
+          --show-trace
