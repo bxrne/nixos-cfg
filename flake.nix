@@ -16,7 +16,7 @@
         thinkpad = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            nixos-hardware.nixosModules.lenovo-thinkpad-x1-carbon
+            nixos-hardware.nixosModules.lenovo-thinkpad-x1
             ./hosts/thinkpad
             ./modules/common.nix
           ];
